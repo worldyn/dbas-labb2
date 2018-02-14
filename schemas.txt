@@ -1,0 +1,47 @@
+Person
+  person_id (PK)
+  full_name
+
+Employee
+  person_id (PK + FK pid)
+  position
+  team (FK)
+
+Team
+  t_id (PK)
+  team_name
+  active: bool
+
+Partner
+  person_id (PK + FK)
+  company_id (FK)
+  full_name
+  position
+  
+Company
+  company_id (PK)
+  company_name
+
+Room
+  room_id (PK)
+  name
+  cost_per_hour
+
+Facility
+  facility_id (PK)
+  room_id (FK)
+  name 
+
+Booking
+  booking_id (PK)
+  room_id (FK)
+  start (constraint: discrete hours)
+  finish (constraint: discrete hours)
+  p_id (FK)
+  team_id (FK)
+  total_cost
+
+Participant
+  person_id (FK)
+  booking_id (FK)
+  PK = (person_id, booking_id)
