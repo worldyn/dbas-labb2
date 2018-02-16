@@ -1,0 +1,60 @@
+BEGIN;
+
+CREATE TABLE Person(
+  person_id serial PRIMARY KEY,
+  full_name VARCHAR(50) NOT NULL
+); 
+
+CREATE TABLE Team(
+  team_id serial PRIMARY KEY,
+  team_name VARCHAR(50) NOT NULL,
+  active boolean NOT NULL
+);
+
+CREATE TABLE Employee(
+  person_id int PRIMARY KEY REFERENCES Person(person_id),
+  position VARCHAR(50) NOT NULL,
+  team_id int REFERENCES Team(team_id)
+);
+
+CREATE TABLE Company(
+  company_id serial PRIMARY KEY,
+  company_name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Partner(
+  person_id int PRIMARY KEY REFERENCES Person(person_id),
+  company_id int REFERENCES Company(company_id),
+  full_name VARCHAR(50) NOT NULL,
+  position VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Room(
+  room_id serial PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  cost_per_hour int NOT NULL
+);
+
+CREATE TABLE Facility(
+  facility_id serial PRIMARY KEY,
+  room_id int REFERENCES Room(room_id),
+  name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Booking(
+  booking_id serial PRIMARY KEY,
+  room_id int REFERENCES Room(room_id),
+  person_id int REFERENCES Person(person_id),
+  team_id int REFERENCES Team(team_id),
+  start timestamp NOT NULL,
+  finish timestamp NOT NULL,
+  total_cost int NOT NULL 
+);
+
+CREATE TABLE Participant(
+  person_id int REFERENCES Person(person_id),
+  booking_id int REFERENCES Booking(booking_id),
+  PRIMARY KEY (person_id, booking_id)
+);
+
+COMMIT;
