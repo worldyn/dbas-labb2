@@ -1,0 +1,23 @@
+Adam gör dessa:
+--show which users have booked which meeting
+
+SELECT full_name FROM Person 
+INNER JOIN Booking
+ON Person.person_id = Booking.person_id
+WHERE Booking.booking_id = 1;
+
+--show participants of a given meeting
+
+SELECT full_name FROM Person pe
+INNER JOIN Participant pa
+ON pa.person_id = pe.person_id 
+WHERE pa.booking_id = 1;
+
+--cost for team for given time interval**
+SELECT t.team_name, SUM(total_cost) FROM Booking b
+INNER JOIN Team t ON t.team_id = b.team_id
+WHERE t.team_id = 1
+AND b.start >= timestamp '2018-02-16 13:00:00'
+AND b.finish <= timestamp '2018-02-16 15:00:00'
+GROUP BY t.team_name;
+   

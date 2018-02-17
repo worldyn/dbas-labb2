@@ -1,0 +1,8 @@
+<!doctype html>
+<title>Employees</title>
+<h1>Choose Employee</h1>
+<ul>
+  {% for id,name in employees %}
+  <li><a href="/meetings/{{id}}">{{name}}</a></p>
+  {% endfor %}
+</ul>
