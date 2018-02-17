@@ -1,0 +1,12 @@
+<title>Meetings</title>
+<h3 style="color:red;">{{error_message}}</h3>
+<h1>Upcoming Meetings For {{full_name}}</h1>
+<form method='post'>
+  <ul>
+    {% for m in meetings %}
+      <li>from <em>{{m.0}}</em> to {{m.1}} in {{m.2}}</li>
+      <!-- TODO: Put some kind of delete button here -->
+      <!--<input />-->
+    {% endfor %}
+  </ul>
+</form>
