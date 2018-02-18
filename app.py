@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import psycopg2
+import datetime
 
 app = Flask(__name__)
 # global variables pointing to database
@@ -51,7 +52,49 @@ def meetings(id):
 
 @app.route('/book/<int:id>')
 def book(id):
-  return render_template('book.html')
+  int(id)
+  global cursor
+  try:
+    cursor.execute("SELECT full_name FROM Person WHERE person_id=%s", str(id))
+    full_name = cursor.fetchone()[0]
+    cursor.execute("SELECT room_id, name, cost_per_hour FROM Room")
+    rooms = cursor.fetchall()
+    cursor.execute("SELECT person_id, full_name FROM Person")
+    people = cursor.fetchall()
+    cursor.execute("SELECT Team.team_id, team_name FROM Team\
+    INNER JOIN Employee\
+    ON Employee.person_id = %s\
+    AND Employee.team_id = Team.team_id\
+    AND Team.active = true", str(id))
+    teams = cursor.fetchall()
+    
+    # get facilities for each room
+    for i in range(0, len(rooms)):
+      cursor.execute("SELECT name FROM Facility WHERE room_id=%s", str(rooms[i][0]))
+      facilities = cursor.fetchall()
+      if len(facilities) == 0:
+        fstr = "None"
+      else:
+        fstr = ""
+        for f in facilities:
+          if not len(fstr) == 0:
+            fstr += ", "
+          fstr += f[0]
+      rooms[i] = (rooms[i][0], rooms[i][1], rooms[i][2], fstr)
+    
+    def_date = datetime.datetime.now().strftime("%Y-%m-%d")
+    
+    return render_template(
+      'book.html',
+      id=id,
+      full_name=full_name,
+      rooms=rooms,
+      people=people,
+      teams=teams,
+      def_date=def_date
+    )
+  except ValueError:
+    return "Bad request"
 
 # PostgreSQL database connection and
 # initialization of global cursor 

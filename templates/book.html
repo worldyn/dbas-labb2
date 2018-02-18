@@ -1,1 +1,29 @@
-<h1>Book at meeting</h1>
+<h1>Book meeting</h1>
+<p>Booking as {{full_name}}.</p>
+
+<form method="get" action="/perform_booking">
+  <input type="hidden" name="booked_by" value="{{id}}">
+  <b>Room:</b><br>
+  {% for r in rooms %}
+    <input type="radio" name="room" value="{{r.0}}" required> {{r.1}} ({{r.2}} kr per hour),
+    Facilities: {{r.3}}<br>
+  {% endfor %}
+  <b>Date:</b> <input type="date" id="date" value="{{def_date}}"><br>
+  <b>Start time:</b> <input type="time" id="start-time" step="3600"><br>
+  <b>End time:</b> <input type="time" id="end-time" step="3600"><br>
+  <b>Participants:</b><br>
+  {% for p in people %}
+    <input type="checkbox" name="participant" value="{{p.0}}"
+    {% if p.0 == id %} checked disabled {% endif %}> {{p.1}}<br>
+  {% endfor %}
+  <input type="hidden" name="participant" value="{{id}}">
+  <b>Team:</b><br>
+    {% for t in teams %}
+      <input type="radio" name="team" value="{{t.0}}"
+      {% if teams|length == 1 %} checked disabled {% endif %} required> {{t.1}}<br>
+    {% endfor %}<br>
+    {% if teams|length == 1 %}
+      <input type="hidden" name="team" value="{{teams.0.0}}">
+    {% endif %}
+  <input type="submit" value="Book meeting">
+</form>
