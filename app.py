@@ -40,17 +40,18 @@ def meetings(id):
     "r.room_id = b.room_id",(str(id)))
     meetings = cursor.fetchall()
     return render_template(
-      'meetings.html', 
-      full_name=full_name, 
+      'meetings.html',
+      id=id,
+      full_name=full_name,
       meetings=meetings,
       error_message=error_message
     )
   except ValueError:
     return "Bad request"
 
-#@app.route('/book/<id>')
-#def book(id=None):
-#  return render_template('book.html')
+@app.route('/book/<int:id>')
+def book(id):
+  return render_template('book.html')
 
 # PostgreSQL database connection and
 # initialization of global cursor 
