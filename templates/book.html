@@ -8,9 +8,9 @@
     <input type="radio" name="room" value="{{r.0}}" required> {{r.1}} ({{r.2}} kr per hour),
     Facilities: {{r.3}}<br>
   {% endfor %}
-  <b>Date:</b> <input type="date" id="date" value="{{def_date}}"><br>
-  <b>Start time:</b> <input type="time" id="start-time" step="3600"><br>
-  <b>End time:</b> <input type="time" id="end-time" step="3600"><br>
+  <b>Date:</b> <input type="date" name="date" value="{{def_date}}"><br>
+  <b>Start time:</b> <input type="time" name="start_time" step="3600"><br>
+  <b>End time:</b> <input type="time" name="end_time" step="3600"><br>
   <b>Participants:</b><br>
   {% for p in people %}
     <input type="checkbox" name="participant" value="{{p.0}}"
