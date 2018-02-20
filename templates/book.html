@@ -1,7 +1,7 @@
 <h1>Book meeting</h1>
 <p>Booking as {{full_name}}.</p>
 
-<form method="get" action="/perform_booking">
+<form method="post" action="/perform_booking">
   <input type="hidden" name="booked_by" value="{{id}}">
   <b>Room:</b><br>
   {% for r in rooms %}
@@ -25,5 +25,6 @@
     {% if teams|length == 1 %}
       <input type="hidden" name="team" value="{{teams.0.0}}">
     {% endif %}
-  <input type="submit" value="Book meeting">
+  <input type="submit" value="Book meeting"><br>
 </form>
+<a href="../meetings/{{id}}">Cancel</a>

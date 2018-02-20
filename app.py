@@ -37,7 +37,7 @@ def meetings(id):
     cursor.execute("SELECT full_name FROM Person WHERE person_id=%s", (str(id)))
     full_name = cursor.fetchone()[0]
     cursor.execute("SELECT b.start, b.finish, r.name FROM Booking b "\
-    "INNER JOIN Participant p ON p.person_id = %s INNER JOIN Room r ON "\
+    "INNER JOIN Participant p ON p.person_id = %s AND b.booking_id = p.booking_id INNER JOIN Room r ON "\
     "r.room_id = b.room_id",(str(id)))
     meetings = cursor.fetchall()
     return render_template(
@@ -99,28 +99,28 @@ def book(id):
   except ValueError:
     return "Bad request"
 
-@app.route('/perform_booking', methods=['GET', 'POST'])
+@app.route('/perform_booking', methods=['POST'])
 def perform_booking():
   global cursor
   try:
-    booked_by = int(request.args['booked_by'])
-    room = int(request.args['room'])
-    meetingdate = datetime.strptime(request.args['date'], "%Y-%m-%d")
-    start = datetime.strptime(request.args['start_time'], "%H:%M")\
+    booked_by = int(request.form['booked_by'])
+    room = int(request.form['room'])
+    meetingdate = datetime.strptime(request.form['date'], "%Y-%m-%d")
+    start = datetime.strptime(request.form['start_time'], "%H:%M")\
     .replace(year=meetingdate.year, month=meetingdate.month, day=meetingdate.day)
-    end = datetime.strptime(request.args['end_time'], "%H:%M")\
+    end = datetime.strptime(request.form['end_time'], "%H:%M")\
     .replace(year=meetingdate.year, month=meetingdate.month, day=meetingdate.day)
-    parts = [int(p) for p in request.args.getlist('participant')]
-    team = int(request.args['team'])
+    participants = [int(p) for p in request.form.getlist('participant')]
+    team = int(request.form['team'])
     hours = (end-start).total_seconds() / 3600
     
     now = datetime.now()
-    print(start)
-    print(end)
-    print(hours)
     
-    query = "\
-    BEGIN;\
+    err = ""
+    if start < now:
+      err = "Cannot book meetings in the past."
+    
+    query = "BEGIN;\
     INSERT INTO Booking (room_id, person_id, team_id, start, finish, total_cost)\
     SELECT *\
     FROM (SELECT\
@@ -136,16 +136,29 @@ def perform_booking():
       WHERE b.start < '{4}'\
       AND b.finish > '{3}'\
       AND b.room_id = {0}\
-    );\
-    COMMIT;".format(str(room), str(booked_by), str(team), str(start),\
+    ) RETURNING booking_id;".format(str(room), str(booked_by), str(team), str(start),
     str(end), str(hours))
     
-    cursor.execute(query)
-    success = cursor.rowcount > 0
+    if err == "":
+      cursor.execute(query)
+      booking_id = cursor.fetchone()
+      if booking_id == None:
+        err = "Cannot book meeting."
+      else:
+        booking_id = booking_id[0]
+    
+    if err == "":
+      query = ""
+      for p in participants:
+        query += "INSERT INTO Participant(person_id, booking_id) VALUES ({0}, {1});"\
+        .format(str(p), str(booking_id))
+      query += "COMMIT;"
+      cursor.execute(query)
     
     return render_template(
       "perform_booking.html",
-      success=success
+      booked_by=booked_by,
+      err=err
     )
   except ValueError:
     raise
