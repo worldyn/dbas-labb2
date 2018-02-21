@@ -1,0 +1,9 @@
+{% if err == "" %}
+<p>Booking successful!</p>
+<a href="../meetings/{{booked_by}}">Continue</a>
+{% else %}
+<p>Booking failed.</p>
+<p style="color: red;">{{err}}</p>
+<a href="../book/{{booked_by}}">Try again</a>
+{% endif %}
+<br>
