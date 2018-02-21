@@ -43,24 +43,7 @@ WHERE NOT EXISTS (
 ```
 
 **insert booking if not overlapping with another booked meeting**
-START_TIME
-FINISH_TIME
-```SQL
-INSERT INTO Booking (room_id, person_id, team_id, start, finish, total_cost)
-SELECT (ROOM, PERSON, TEAM, START_TIME, FINISH_TIME,
-  (SELECT DATEDIFF(hour, START_TIME, END_TIME)) *
-  (SELECT cost_per_hour
-  FROM Room
-  WHERE Room.room_id = ROOM)
-)
-WHERE NOT EXISTS (
-  SELECT *
-  FROM Booking as b
-  WHERE b.start < FINISH_TIME
-  AND b.finish > START_TIME
-  AND b.room_id = ROOM
-);
-```
+(removed because it was outdated)
 
 **delete meetings that have not occured**
 ```SQL
