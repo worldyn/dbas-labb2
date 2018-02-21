@@ -2,11 +2,12 @@
 <h3 style="color:red;">{{error_message}}</h3>
 <h1>Upcoming Meetings For {{full_name}}</h1>
 <form method='post'>
+  <input type="hidden" name="person_id" value="{{person_id}}" />
   <ul>
     {% for m in meetings %}
-      <li>from <em>{{m.0}}</em> to {{m.1}} in {{m.2}}</li>
-      <!-- TODO: Put some kind of delete button here -->
-      <!--<input />-->
+      <li>from <em>{{m.1}}</em> to <em>{{m.2}}</em> in {{m.3}}</li>
+      <input type="checkbox" name="booking_id" value="{{m.0}}" />
     {% endfor %}
   </ul>
+  <input type="submit" value="Cancel Meetings">
 </form>
