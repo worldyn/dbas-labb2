@@ -33,23 +33,24 @@ def meetings(id):
       global cursor
       b_ids = request.form.getlist('booking_id')
       num_bookings = len(b_ids)
-      p_id = request.form['person_id']
-      b_ids = tuple([int(x) for x in b_ids])
-      cursor.execute("SELECT booking_id FROM Booking b WHERE "\
-      "b.person_id = %s AND b.booking_id IN %s",(int(p_id),b_ids))
-      valid_bids = cursor.fetchall()
-      if num_bookings != len(valid_bids):
-        error_message = "You can only delete bookings made by you!"
-      if len(valid_bids) > 0:  
-        # transform to tuple for the sql query
-        if len(valid_bids) == 1:
-          b_id = valid_bids[0][0]
-          cursor.execute("DELETE FROM Booking b WHERE "\
-          "b.booking_id = %s", [b_id])
-        else:
-          valid_bids = tuple(map(lambda tup: tup[0], valid_bids))
-          cursor.execute("DELETE FROM Booking b WHERE b.booking_id "\
-          "IN %s",(valid_bids))
+      if num_bookings > 0:
+        p_id = request.form['person_id']
+        b_ids = tuple([int(x) for x in b_ids])
+        cursor.execute("SELECT booking_id FROM Booking b WHERE "\
+        "b.person_id = %s AND b.booking_id IN %s",(int(p_id),b_ids))
+        valid_bids = cursor.fetchall()
+        if num_bookings != len(valid_bids):
+          error_message = "You can only delete bookings made by you!"
+        if len(valid_bids) > 0:  
+          # transform to tuple for the sql query
+          if len(valid_bids) == 1:
+            b_id = valid_bids[0][0]
+            cursor.execute("DELETE FROM Booking b WHERE "\
+            "b.booking_id = %s", (str(b_id)))
+          else:
+            valid_bids = tuple(map(lambda tup: tup[0], valid_bids))
+            cursor.execute("DELETE FROM Booking b WHERE b.booking_id "\
+            "IN %s",(valid_bids))
 
     # Get person_id and full name 
     cursor.execute("SELECT person_id,full_name FROM Person "\
@@ -59,9 +60,11 @@ def meetings(id):
     full_name = person[1]
 
     # get bookings
-    cursor.execute("SELECT b.booking_id, b.start, b.finish, r.name FROM "\
+    cursor.execute("SELECT DISTINCT ON(b.booking_id) b.booking_id, "\
+    "b.start, b.finish, r.name FROM "\
     "Booking b INNER JOIN Participant p ON p.person_id = %s INNER JOIN "\
-    "Room r ON r.room_id = b.room_id",(str(id)))
+    "Room r ON r.room_id = b.room_id WHERE "\
+    "b.start >= current_timestamp",(str(id)))
     meetings = cursor.fetchall()
 
     return render_template(
