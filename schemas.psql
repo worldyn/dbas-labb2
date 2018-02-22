@@ -3,7 +3,7 @@ BEGIN;
 CREATE TABLE Person(
   person_id serial PRIMARY KEY,
   full_name VARCHAR(50) NOT NULL
-); 
+);
 
 CREATE TABLE Team(
   team_id serial PRIMARY KEY,
@@ -13,7 +13,7 @@ CREATE TABLE Team(
 
 CREATE TABLE Employee(
   person_id int PRIMARY KEY REFERENCES Person(person_id) ON DELETE CASCADE,
-  position VARCHAR(50) NOT NULL,
+  position VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE IsinTeam (
