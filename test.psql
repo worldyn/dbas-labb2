@@ -11,10 +11,16 @@ INSERT INTO Team(team_name, active) VALUES ('Team 1', true);
 INSERT INTO Team(team_name, active) VALUES ('Team 2', true);
 INSERT INTO Team(team_name, active) VALUES ('Team 3', false);
 
-INSERT INTO Employee(person_id, position, team_id) VALUES (1, 'employed', 1);
-INSERT INTO Employee(person_id, position, team_id) VALUES (2, 'employed', 1);
-INSERT INTO Employee(person_id, position, team_id) VALUES (3, 'employed', 2);
-INSERT INTO Employee(person_id, position, team_id) VALUES (4, 'employed', 2);
+INSERT INTO Employee(person_id, position) VALUES (1, 'employed');
+INSERT INTO Employee(person_id, position) VALUES (2, 'employed');
+INSERT INTO Employee(person_id, position) VALUES (3, 'employed');
+INSERT INTO Employee(person_id, position) VALUES (4, 'employed');
+
+INSERT INTO IsinTeam(person_id, team_id) VALUES (1,1);
+INSERT INTO IsinTeam(person_id, team_id) VALUES (2,1);
+INSERT INTO IsinTeam(person_id, team_id) VALUES (3,2);
+INSERT INTO IsinTeam(person_id, team_id) VALUES (4,2);
+INSERT INTO IsinTeam(person_id, team_id) VALUES (1,2);
 
 INSERT INTO Company(company_name) VALUES ('Nintendo');
 

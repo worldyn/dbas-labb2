@@ -14,7 +14,12 @@ CREATE TABLE Team(
 CREATE TABLE Employee(
   person_id int PRIMARY KEY REFERENCES Person(person_id) ON DELETE CASCADE,
   position VARCHAR(50) NOT NULL,
-  team_id int NOT NULL REFERENCES Team(team_id)
+);
+
+CREATE TABLE IsinTeam (
+  person_id int REFERENCES Employee(person_id),
+  team_id int REFERENCES Team(team_id),
+  PRIMARY KEY (person_id, team_id)
 );
 
 CREATE TABLE Company(
