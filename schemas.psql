@@ -48,7 +48,7 @@ CREATE TABLE Facility(
 CREATE TABLE Booking(
   booking_id serial PRIMARY KEY,
   room_id int NOT NULL REFERENCES Room(room_id),
-  person_id int NOT NULL REFERENCES Person(person_id),
+  person_id int REFERENCES Person(person_id) ON DELETE SET NULL,
   team_id int NOT NULL REFERENCES Team(team_id),
   start timestamp NOT NULL,
   finish timestamp NOT NULL,
