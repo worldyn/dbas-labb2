@@ -43,14 +43,22 @@ WHERE NOT EXISTS (
 ```
 
 **insert booking if not overlapping with another booked meeting**
-(removed because it was outdated)
+see app.py
 
 **delete meetings that have not occured**
-```SQL
-```
+see app.py
 
 **fetch occupied rooms for a given date**
 ```SQL
+SELECT room_id, name
+  FROM Room
+  WHERE EXISTS (
+    SELECT *
+    FROM Booking
+    WHERE start <= timestamp '2018-02-16 13:00:00'
+    AND finish >= timestamp '2018-02-16 13:00:00'
+    AND Booking.room_id = Room.room_id
+  );
 ```
 
 Adam gör dessa:

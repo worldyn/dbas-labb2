@@ -3,7 +3,7 @@ BEGIN;
 CREATE TABLE Person(
   person_id serial PRIMARY KEY,
   full_name VARCHAR(50) NOT NULL
-); 
+);
 
 CREATE TABLE Team(
   team_id serial PRIMARY KEY,
@@ -13,8 +13,13 @@ CREATE TABLE Team(
 
 CREATE TABLE Employee(
   person_id int PRIMARY KEY REFERENCES Person(person_id) ON DELETE CASCADE,
-  position VARCHAR(50) NOT NULL,
-  team_id int NOT NULL REFERENCES Team(team_id)
+  position VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE IsinTeam (
+  person_id int REFERENCES Employee(person_id),
+  team_id int REFERENCES Team(team_id),
+  PRIMARY KEY (person_id, team_id)
 );
 
 CREATE TABLE Company(
@@ -43,7 +48,7 @@ CREATE TABLE Facility(
 CREATE TABLE Booking(
   booking_id serial PRIMARY KEY,
   room_id int NOT NULL REFERENCES Room(room_id),
-  person_id int NOT NULL REFERENCES Person(person_id),
+  person_id int REFERENCES Person(person_id) ON DELETE SET NULL,
   team_id int NOT NULL REFERENCES Team(team_id),
   start timestamp NOT NULL,
   finish timestamp NOT NULL,
